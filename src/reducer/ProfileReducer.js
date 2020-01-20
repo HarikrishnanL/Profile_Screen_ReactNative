@@ -33,13 +33,16 @@ const ProfileReducer = (state = DEFAULT_STATE_PROFILE, action) => {
             return {
                 ...state,
                 MaleRadioData: true,
+                FemaleRadioData:false,
                 
 
             }
         case RADIO_PROFILE_DATA_FEMALE:
             return {
                 ...state,
-                FemaleRadioData: true
+                FemaleRadioData: true,
+                MaleRadioData: false,
+
             }
         case PROFILE_PIC_DATA:
             return {
