@@ -1,12 +1,12 @@
 import React from 'react';
-import {TouchableOpacity, View, StyleSheet} from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
 
 const RadioButton = props => {
-       return ( 
-    <TouchableOpacity style={styles.circle} onPress={props.onPress}>
-        {props.checked ? (<View style={styles.checkedCircle} />) : (<View />)}
-    </TouchableOpacity>
-       )
+    return (
+        <TouchableOpacity style={styles.circle} onPress={props.onPress}>
+            {props.checked ? (<View style={styles.checkedCircle} />) : (<View />)}
+        </TouchableOpacity>
+    )
 };
 
 const styles = StyleSheet.create({

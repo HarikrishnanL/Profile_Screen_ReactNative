@@ -19,12 +19,24 @@ export default class ProfileViewComponent extends Component {
             <Container>
 
                 <ScrollView>
-                    <Image
-                        source={{
-                            uri: 'data:image/jpeg;base64,' + this.props.navigation.state.params.Data.map(x => x.Picdata),
-                        }}
-                        style={{ width: 170, height: 170, alignSelf: 'center', borderRadius: 170 / 2, marginTop: 20 }}
-                    />
+                    {this.props.navigation.state.params.Data.map(x => x.Picdata) == "" ? (
+                        <Image
+                            source={{
+                                uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+                            }}
+                            style={{ width: 170, height: 170, alignSelf: 'center', borderRadius: 170 / 2, marginTop: 20 }}
+                        />
+                    )
+                        :
+                        (
+                            <Image
+                                source={{
+                                    uri: 'data:image/jpeg;base64,' + this.props.navigation.state.params.Data.map(x => x.Picdata),
+                                }}
+                                style={{ width: 170, height: 170, alignSelf: 'center', borderRadius: 170 / 2, marginTop: 20 }}
+                            />
+                        )}
+
 
                     <View style={{ marginTop: 30, marginLeft: 50 }}>
                         <Text style={{ fontSize: 14, color: '#c7cbd1' }}>Name</Text>
@@ -50,6 +62,11 @@ export default class ProfileViewComponent extends Component {
                         ) : (
                                 <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>Female</Text>
                             )}
+                    </View>
+
+                    <View style={{ marginTop: 20, marginLeft: 50 }}>
+                        <Text style={{ fontSize: 14, color: '#c7cbd1' }}>DOB</Text>
+                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.map(x => x.date)}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
