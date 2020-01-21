@@ -24,7 +24,7 @@ export default class ProfileViewComponent extends Component {
                             source={{
                                 uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
                             }}
-                            style={{ width: 170, height: 170, alignSelf: 'center', borderRadius: 170 / 2, marginTop: 20 }}
+                            style={{ width: 120, height: 120, alignSelf: 'center', borderRadius: 120 / 2, marginTop: 20 }}
                         />
                     )
                         :
@@ -33,7 +33,7 @@ export default class ProfileViewComponent extends Component {
                                 source={{
                                     uri: 'data:image/jpeg;base64,' + this.props.navigation.state.params.Data.map(x => x.Picdata),
                                 }}
-                                style={{ width: 170, height: 170, alignSelf: 'center', borderRadius: 170 / 2, marginTop: 20 }}
+                                style={{ width: 120, height: 120, alignSelf: 'center', borderRadius: 120 / 2, marginTop: 20 }}
                             />
                         )}
 
