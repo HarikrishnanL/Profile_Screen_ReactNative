@@ -13,16 +13,11 @@ export default class ProfileComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            RadioButtonMale: false,
-            RadioButtonFemale: false,
-            emailId: '',
             date: "21-01-2020",
-            flag: false
+            OTFflag: false,
         }
 
     }
-
-    componentDidMount() { }
 
     chooseFile = () => {
         var options = {
@@ -52,101 +47,97 @@ export default class ProfileComponent extends Component {
         });
     };
     FirstNameHandler = (FirstName) => {
+
+
         this.props.OnRenderProfileFetch(FirstName);
 
     }
 
     LastNameHandler = (LastName) => {
+
         this.props.OnRenderProfileFetchLastName(LastName)
+
     }
 
     EmailHandler = (Email) => {
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        let email = [].concat(Email);
-        let emailid = email[0].trim();
-        console.log(email)
-        console.log(emailid)
 
-        this.props.OnRenderProfileFetchEmail(emailid)
+        // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        let email = "".concat(Email).trim();
+        // let emailid = email.trim();
+        console.log(email)
+        // console.log(emailid)
+
+        this.props.OnRenderProfileFetchEmail(email)
+
     }
 
     MobileNumberHandler = (MobileNumber) => {
-        var mob = /^[1-9]{1}[0-9]{9}$/;
-        let mobile = [].concat(MobileNumber);
-        let mobileNo = mobile[0].trim();
 
-
-        this.props.OnRenderProfileFetchMobile(mobileNo)
-
+        // var mob = /^[1-9]{1}[0-9]{9}$/;
+        let mobile = "".concat(MobileNumber).trim();
+        // let mobileNo = mobile[0].trim();
+        this.props.OnRenderProfileFetchMobile(mobile)
 
     }
 
     RadioButtonHandlerMale = (RadioData) => {
+
         this.props.OnRenderRadioFetchMale(RadioData)
-        // this.setState({
-        //     RadioButtonMale: this.props.ProfileInfo.MaleRadioData,
-        //     RadioButtonFemale: false
-        // })
+
+
     }
 
     RadioButtonHandlerFemale = (RadioData) => {
+
         this.props.OnRenderRadioFetchFemale(RadioData)
         // this.setState({
         //     RadioButtonMale: false,
         //     RadioButtonFemale: this.props.ProfileInfo.FemaleRadioData
         // })
+
     }
     onNavigationHandler = () => {
-
+        // this.setState({OTFflag:true})
         console.log(this.props.ProfileInfo)
-        this.setState({ flag: true })
-
-        if (this.props.ProfileInfo.FirstName !== "") {
-            if (this.props.ProfileInfo.LastName !== "") {
-                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                let mob = /^[1-9]{1}[0-9]{9}$/;
-                if (mob.test(this.props.ProfileInfo.MobileNumber) == true && isNaN(this.props.ProfileInfo.MobileNumber) != true) {
-                    if (reg.test(this.props.ProfileInfo.Email) == true) {
-                        if (this.props.ProfileInfo.MaleRadioData == true || this.props.ProfileInfo.FemaleRadioData == true) {
-                            if (this.props.ProfileInfo.date !== "") {
-                                this.props.navigation.navigate('ProfileView', { Data: [this.props.ProfileInfo] })
-                            }
-                        }
-                    }
-
-                }
-            }
+        // if (this.props.ProfileInfo.FirstName !== "") {
+        //     if (this.props.ProfileInfo.LastName !== "") {
+        //         if (isNaN(this.props.ProfileInfo.MobileNumber) != true) {
+        //             if (this.props.ProfileInfo.MaleRadioData == true || this.props.ProfileInfo.FemaleRadioData == true) {
+        //                 if (this.props.ProfileInfo.date !== "") {
+        //                     this.props.navigation.navigate('ProfileView', { Data: [this.props.ProfileInfo] })
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        if (this.props.ProfileInfo.FirstName !== "" && this.props.ProfileInfo.LastName !== "" && this.props.ProfileInfo.date !== "" && (this.props.ProfileInfo.MaleRadioData == true || this.props.ProfileInfo.FemaleRadioData == true) && this.props.ProfileInfo.Email !== "" && this.props.ProfileInfo.MobileNumber !== "") {
+            this.props.navigation.navigate('ProfileView', { Data: this.props.ProfileInfo })
+        } else {
+            this.setState({ OTFflag: true })
         }
+
     }
 
     DateHandler = (date) => {
         this.props.OnRenderDateFetchData(date)
-        this.setState({ date: this.props.ProfileInfo.date })
+
     }
 
     refreshScreen = (data) => {
-        this.setState({ flag: false })
+        this.setState({ OTFflag: false })
         this.props.OnRefresh(data)
+
     }
 
-
-
-
     render() {
-        console.log(this.props.ProfileInfo)
-
-
         return (
             <Container>
 
                 <Toast ref="toast" />
 
                 <KeyboardAwareScrollView>
-
-                    <Text style={{ alignSelf: 'center', fontSize: 20, marginTop: 5 }}>Profile Information</Text>
-
                     <View>
-                        <TouchableOpacity onPress={this.chooseFile} style={{ width: "50%", alignSelf: 'center' }}>
+                        <TouchableOpacity onPress={this.chooseFile} style={{ width: "50%", alignSelf: 'center', marginTop: 20 }}>
                             {this.props.ProfileInfo.Picdata == "" ? (
                                 <Image
                                     source={{
@@ -174,12 +165,12 @@ export default class ProfileComponent extends Component {
                             value={this.props.ProfileInfo.FirstName}
                             onChangeText={this.FirstNameHandler}
                         />
-                        {this.state.flag == true ? (
+                        {this.state.OTFflag == true ? (
                             this.props.ProfileInfo.FirstName !== "" ? (
                                 <View />
                             ) : (
                                     <View>
-                                        <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 17, fontSize: 12, color: 'red' }}>* Enter your first name</Text>
+                                        <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 12, color: 'red' }}>* Enter your first name</Text>
                                     </View>
                                 )
                         ) :
@@ -187,17 +178,16 @@ export default class ProfileComponent extends Component {
                                 <View />
                             )}
 
-
                         <TextInput
                             style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%", marginLeft: 35 }}
                             placeholder={'Last Name'}
                             onChangeText={this.LastNameHandler}
                             value={this.props.ProfileInfo.LastName}
                         />
-                        {this.state.flag == true ? (
+                        {this.state.OTFflag == true ? (
                             this.props.ProfileInfo.LastName == "" ? (
                                 <View>
-                                    <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 17, fontSize: 12, color: 'red' }}>* Enter your last name</Text>
+                                    <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 12, color: 'red' }}>* Enter your last name</Text>
 
                                 </View>
                             ) :
@@ -224,10 +214,10 @@ export default class ProfileComponent extends Component {
 
                         </View>
 
-                        {this.state.flag == true ? (
+                        {this.state.OTFflag == true ? (
                             (this.props.ProfileInfo.MaleRadioData == false && this.props.ProfileInfo.FemaleRadioData == false) ? (
                                 <View>
-                                    <Text style={{ width: "80%", marginLeft: 35, fontSize: 17, fontSize: 12, color: 'red' }}>* Select your gender  </Text>
+                                    <Text style={{ width: "80%", marginLeft: 35, fontSize: 12, color: 'red' }}>* Select your gender  </Text>
                                 </View>
                             ) : (
                                     <View />
@@ -239,11 +229,11 @@ export default class ProfileComponent extends Component {
 
 
                         <DatePicker
-                            style={{ width: "45%", marginLeft: 35, marginTop: 17 }}
+                            style={{ width: "45%", marginLeft: 30, marginTop: 17 }}
 
-                            date={this.state.date} //initial date from state
+                            date={this.props.ProfileInfo.date} //initial date from state
                             mode="date" //The enum of date, datetime and time
-                            placeholder="select date"
+                            placeholder="Select your DOB"
                             format="DD-MMMM-YYYY"
                             minDate="01-01-1990"
                             maxDate="01-01-2024"
@@ -257,19 +247,17 @@ export default class ProfileComponent extends Component {
                                     marginLeft: 0
                                 },
                                 dateInput: {
-                                    marginLeft: 36
+                                    marginLeft: 0
                                 }
                             }}
                             onDateChange={this.DateHandler}
                         />
 
-
-
-                        {this.state.flag == true ? (
+                        {this.state.OTFflag == true ? (
 
                             this.props.ProfileInfo.date == "" ? (
                                 <View>
-                                    <Text style={{ width: "80%", marginLeft: 35, fontSize: 17, fontSize: 12, color: 'red' }}>* Select date of birth </Text>
+                                    <Text style={{ width: "80%", marginLeft: 35, fontSize: 12, color: 'red' }}>* Select date of birth </Text>
                                 </View>
                             ) : (
                                     <View />
@@ -286,28 +274,24 @@ export default class ProfileComponent extends Component {
                             value={this.props.ProfileInfo.MobileNumber}
                             onChangeText={this.MobileNumberHandler}
                         />
-                        {this.state.flag == true ? (
+                        {this.state.OTFflag == true ? (
                             this.props.ProfileInfo.MobileNumber == "" ? (
                                 <View>
                                     <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 12, color: 'red' }}>* Enter your 10-digit mobile number</Text>
                                 </View>
                             )
                                 : (
-                                    // <View />
                                     /^[1-9]{1}[0-9]{9}$/.test(this.props.ProfileInfo.MobileNumber) == true ? (
-                                        <View>
-                                            <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'green', marginLeft: 35, fontSize: 12, color: 'green' }}>* Valid 10-digit mobile number</Text>
-                                        </View>
+                                        <View />
                                     ) : (
                                             <View>
-                                                <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 12, color: 'red' }}>* Enter Valid 10-digit mobile number</Text>
+                                                <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 12, color: 'red' }}>* Enter your 10-digit mobile number</Text>
                                             </View>
                                         )
                                 )
                         ) : (
                                 <View />
                             )}
-
 
                         <TextInput
                             style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%", marginLeft: 35 }}
@@ -316,11 +300,11 @@ export default class ProfileComponent extends Component {
                             onChangeText={this.EmailHandler}
                         />
 
-                        {this.state.flag == true ? (
+                        {this.state.OTFflag == true ? (
                             this.props.ProfileInfo.Email == "" ? (
                                 <View>
 
-                                    <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 17, fontSize: 12, color: 'red' }}>* Enter your email</Text>
+                                    <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 12, color: 'red' }}>* Enter your email</Text>
 
                                 </View>
 
@@ -328,27 +312,20 @@ export default class ProfileComponent extends Component {
                                 (
                                     /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.props.ProfileInfo.Email) == true ?
                                         (
-                                            <View>
-
-                                                <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'green', marginLeft: 35, fontSize: 17, fontSize: 12, color: 'green' }}>* Valid email Id</Text>
-
-                                            </View>
-
+                                            <View />
                                         ) : (
-
                                             <View>
 
-                                                <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 17, fontSize: 12, color: 'red' }}>* Enter Valid email</Text>
+                                                <Text style={{ width: "80%", borderTopWidth: 1, borderColor: 'red', marginLeft: 35, fontSize: 12, color: 'red' }}>* Enter your email</Text>
 
                                             </View>
                                         )
+
                                 )
 
                         ) : (
                                 <View />
                             )}
-
-
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingTop: 20 }}>
 
@@ -359,7 +336,7 @@ export default class ProfileComponent extends Component {
 
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.customCancelBtn} onPress={() => this.refreshScreen()}>
+                            <TouchableOpacity style={styles.customCancelBtn} onPress={this.refreshScreen}>
                                 <View style={styles.customBtnView}>
                                     <Text style={styles.customCancelBtnText}> Cancel </Text>
                                 </View>

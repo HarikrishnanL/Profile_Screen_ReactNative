@@ -11,15 +11,16 @@ export default class ProfileViewComponent extends Component {
     }
     componentDidMount() {
         this.props.OnRenderProfileView();
+        console.log(this.props.navigation.state.params.Data);
     }
 
     render() {
-        console.log(this.props.navigation.state.params.Data)
+       
         return (
             <Container>
 
                 <ScrollView>
-                    {this.props.navigation.state.params.Data.map(x => x.Picdata) == "" ? (
+                    {this.props.navigation.state.params.Data.Picdata == "" ? (
                         <Image
                             source={{
                                 uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
@@ -31,7 +32,7 @@ export default class ProfileViewComponent extends Component {
                         (
                             <Image
                                 source={{
-                                    uri: 'data:image/jpeg;base64,' + this.props.navigation.state.params.Data.map(x => x.Picdata),
+                                    uri: 'data:image/jpeg;base64,' + this.props.navigation.state.params.Data.Picdata,
                                 }}
                                 style={{ width: 120, height: 120, alignSelf: 'center', borderRadius: 120 / 2, marginTop: 20 }}
                             />
@@ -40,24 +41,24 @@ export default class ProfileViewComponent extends Component {
 
                     <View style={{ marginTop: 30, marginLeft: 50 }}>
                         <Text style={{ fontSize: 14, color: '#c7cbd1' }}>Name</Text>
-                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.map(x => x.FirstName + " " + x.LastName)}</Text>
+                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.FirstName+" "+this.props.navigation.state.params.Data.LastName }</Text>
 
 
                     </View>
 
                     <View style={{ marginTop: 20, marginLeft: 50 }}>
                         <Text style={{ fontSize: 14, color: '#c7cbd1' }}>Mobile</Text>
-                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.map(x => x.MobileNumber)}</Text>
+                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.MobileNumber}</Text>
                     </View>
 
                     <View style={{ marginTop: 20, marginLeft: 50 }}>
                         <Text style={{ fontSize: 14, color: '#c7cbd1' }}>Email</Text>
-                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.map(x => x.Email)}</Text>
+                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.Email}</Text>
                     </View>
 
                     <View style={{ marginTop: 20, marginLeft: 50 }}>
                         <Text style={{ fontSize: 14, color: '#c7cbd1' }}>Gender</Text>
-                        {this.props.navigation.state.params.Data.find(x => x.MaleRadioData == true) ? (
+                        {this.props.navigation.state.params.Data.MaleRadioData == true ? (
                             <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>Male</Text>
                         ) : (
                                 <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>Female</Text>
@@ -66,7 +67,7 @@ export default class ProfileViewComponent extends Component {
 
                     <View style={{ marginTop: 20, marginLeft: 50 }}>
                         <Text style={{ fontSize: 14, color: '#c7cbd1' }}>DOB</Text>
-                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.map(x => x.date)}</Text>
+                        <Text style={{ fontSize: 15, borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "80%" }}>{this.props.navigation.state.params.Data.date}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
