@@ -12,17 +12,22 @@ import configureStore from './src/store/configureStore'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
-
+//Action Screens
 import ProfileAction from './src/action/ProfileAction';
 import ProfileViewAction from './src/action/ProfileViewAction'
+import ProductListAction from './src/action/ProductListingAction';
+import SingleProductAction from './src/action/SingleProductAction';
+
 
 const AppNavigator = createStackNavigator({
   Profile: { screen: ProfileAction },
-  ProfileView: { screen: ProfileViewAction }, 
+  ProfileView: { screen: ProfileViewAction },
+  ProductList: { screen: ProductListAction },
+  SingleProduct: { screen: SingleProductAction }
 },
-{
-  initialRouteName: 'Profile',
-}
+  {
+    initialRouteName: 'ProductList',
+  }
 )
 
 const AppContainer = createAppContainer(AppNavigator);
