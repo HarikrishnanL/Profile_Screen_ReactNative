@@ -51,9 +51,10 @@ const ProfileListingReducer = (state = DEFAULT_STATE_PRODUCT_LISTING, action) =>
             }
 
         case FETCH_PRODUCT_VARIATION_NAME:
+            console.log(action.VariationProductName)
             return {
                 ...state,
-                VariationProductName: action.VariationProductName
+                VariationProductName: action.VariationProductName,
             }
 
         case FETCH_PRODUCT_VARIATION_PRICE:
@@ -77,6 +78,23 @@ const ProfileListingReducer = (state = DEFAULT_STATE_PRODUCT_LISTING, action) =>
 
         case FETCH_TEST:
             {
+                // if (state.Variation.length > 0) {
+                //     console.log("today work for god sake")
+                //     let SearchArray = state.Variation.find(x => x.VariationProductName == state.VariationProductName);
+                //     console.log(SearchArray)
+                //     return {
+                //         ...state,
+                //         Variation: SearchArray.push({
+                //             VariationProductName: state.VariationProductName,
+                //             VariationProductPrice:state.VariationProductPrice,
+                //             VariationProductQty:state.VariationProductQty
+                //         })
+
+                //     }
+
+
+
+                // } else {
                 console.log("today list")
                 return {
                     ...state,
@@ -86,7 +104,13 @@ const ProfileListingReducer = (state = DEFAULT_STATE_PRODUCT_LISTING, action) =>
                         VariationProductQty: Number(state.VariationProductQty),
                         VariationProductImage: state.VariationProductImage
                     }),
+                    VariationProductName: '',
+                    VariationProductPrice: 0,
+                    VariationProductQty: 0,
+                    VariationProductImage: '',
                 }
+                // }
+
             }
 
         case PRODUCT_RESET_DATA:

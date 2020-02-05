@@ -1,4 +1,4 @@
-import { PRODUCT_LISTING, FETCH_PRODUCT_NAME, FETCH_PRODUCT_PRICE, FETCH_PRODUCT_DESCRIPTION, FETCH_PRODUCT_QUANTITY, FETCH_PRODUCT_IMAGE, FETCH_PRODUCT_VARIATION_FLAG, FETCH_PRODUCT_VARIATION_NAME, FETCH_PRODUCT_VARIATION_PRICE, FETCH_PRODUCT_VARIATION_QUANTITY,FETCH_PRODUCT_VARIATION_IMAGE,FETCH_TEST,PRODUCT_RESET_DATA } from './actionTypes';
+import { PRODUCT_LISTING, FETCH_PRODUCT_NAME, FETCH_PRODUCT_PRICE, FETCH_PRODUCT_DESCRIPTION, FETCH_PRODUCT_QUANTITY, FETCH_PRODUCT_IMAGE, FETCH_PRODUCT_VARIATION_FLAG, FETCH_PRODUCT_VARIATION_NAME, FETCH_PRODUCT_VARIATION_PRICE, FETCH_PRODUCT_VARIATION_QUANTITY, FETCH_PRODUCT_VARIATION_IMAGE, FETCH_TEST, PRODUCT_RESET_DATA } from './actionTypes';
 import ProductListingComponent from '../component/ProductLisitingComponent';
 import { connect } from 'react-redux';
 
@@ -91,24 +91,25 @@ export const Fetch_Product_Variation_Qty = (VariationProductQty) => {
 
 export const Fetch_Product_Variation_Image = (VariationProductImage) => {
     return {
-        type:FETCH_PRODUCT_VARIATION_IMAGE,
+        type: FETCH_PRODUCT_VARIATION_IMAGE,
         VariationProductImage
     }
 }
 
 export const Fetch_Variation_Product_data = (data) => {
     return {
-        type:FETCH_TEST,
+        type: FETCH_TEST,
         data
     }
-} 
+}
 
 export const Product_Reset_Data = (ResetData) => {
     return {
-        type:PRODUCT_RESET_DATA,
+        type: PRODUCT_RESET_DATA,
         ResetData
     }
-} 
+}
+
 
 
 const mapStateToProps = (state) => {
@@ -146,16 +147,16 @@ const mapDispatchToProps = (dispatch) => {
         OnRenderVariationProductPrice: (VariationProductPrice) => {
             dispatch(Fetch_Product_Variation_Price(VariationProductPrice))
         },
-        OnRenderVariationProductQty : (VariationProductQty) => {
+        OnRenderVariationProductQty: (VariationProductQty) => {
             dispatch(Fetch_Product_Variation_Qty(VariationProductQty))
         },
         OnRenderVariationProductImage: (VariationProductImage) => {
             dispatch(Fetch_Product_Variation_Image(VariationProductImage))
         },
-        OnRenderVariationProductData:(data)=> {
+        OnRenderVariationProductData: (data) => {
             dispatch(Fetch_Variation_Product_data(data))
         },
-        OnRenderProductResetData:(ResetData) => {
+        OnRenderProductResetData: (ResetData) => {
             dispatch(Product_Reset_Data(ResetData))
         }
     }

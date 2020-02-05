@@ -15,14 +15,11 @@ export default class SingleProductComponent extends Component {
             ],
             modalVisible: false,
             VariationName: '',
-            ImageIndex: 0
+            ImageIndex: 0,
+
         }
     }
 
-    componentDidMount() {
-        console.log(this.props.navigation.state.params.ProductData)
-
-    }
 
     ModalImage = (index) => {
         this.setModalVisible(true);
@@ -43,8 +40,8 @@ export default class SingleProductComponent extends Component {
 
     }
 
-
     render() {
+
         var index = 0;
         let ImageArray = this.props.navigation.state.params.ProductData.Variation.filter(x => x.VariationProductImage);
         // let ImageTest = ImageArray.concat("data:image/jpeg;base64," + this.props.navigation.state.params.ProductData.ProductImageData)
@@ -55,6 +52,8 @@ export default class SingleProductComponent extends Component {
         let VProductImage = this.props.navigation.state.params.ProductData.Variation.find(x => x.VariationProductImage == ImageWork[this.state.ImageIndex])
         console.log("log")
         console.log(ImageTest)
+        console.log(ImageArray)
+        console.log(VProduct)
 
         return (
             <Container>
@@ -62,6 +61,7 @@ export default class SingleProductComponent extends Component {
                     {/* <Text>SingleProductComponent</Text> */}
                     <SliderBox
                         images={ImageTest}
+                        ImageComponentStyle={{ width: '100%', height: 200 }}
                         circleLoop
                         onCurrentImagePressed={(index) => {
                             console.log("inde" + index)
@@ -78,23 +78,24 @@ export default class SingleProductComponent extends Component {
                             Alert.alert('Modal has been closed.');
                         }}>
                         <View style={{ marginTop: 22 }}>
-                            <View>
-                                <Text>Hello World!</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' }}>
+                                {/* <Text>Hello World!</Text> */}
                                 {("data:image/jpeg;base64," + this.props.navigation.state.params.ProductData.ProductImageData) == ImageTest[this.state.ImageIndex] ?
                                     (
-                                        <View>
+                                        <View style={{ flexDirection: 'column',justifyContent: 'center', alignSelf: 'center' }}>
                                             <Image
-                                                style={{ width: 50, height: 50 }}
+                                                style={{ width: 200, height: 200 }}
                                                 source={{ uri: ImageTest[this.state.ImageIndex] }}
                                             />
                                             <Text>{this.props.navigation.state.params.ProductData.ProductName}</Text>
+                                            
                                             <Text>{this.props.navigation.state.params.ProductData.ProductPrice}</Text>
                                             <Text>{this.props.navigation.state.params.ProductData.ProductQty}</Text>
                                         </View>
                                     ) :
-                                    (<View>
+                                    (<View style={{ flexDirection: 'column',justifyContent: 'center', alignSelf: 'center' }}>
                                         <Image
-                                            style={{ width: 50, height: 50 }}
+                                            style={{ width: 200, height: 200 }}
                                             source={{ uri: ImageTest[this.state.ImageIndex] }}
                                         />
                                         <Text>{VProductImage.VariationProductName}</Text>
@@ -111,39 +112,60 @@ export default class SingleProductComponent extends Component {
                                 <Text>{VProductImage.VariationProductPrice}</Text>
                                 <Text>{VProductImage.VariationProductQty}</Text> */}
 
-                                <TouchableHighlight
-                                    onPress={() => {
-                                        this.setModalVisible(!this.state.modalVisible);
-                                    }}>
-                                    <Text>Hide Modal</Text>
-                                </TouchableHighlight>
                             </View>
+                        </View>
+                        <View style={{flexDirection:'column',justifyContent:'center',alignSelf:'center'}}>
+                            <TouchableHighlight
+                                onPress={() => {
+                                    this.setModalVisible(!this.state.modalVisible);
+                                }}>
+                                <Text>Hide Modal</Text>
+                            </TouchableHighlight>
                         </View>
                     </Modal>
                 </View>
+
                 {this.props.navigation.state.params.ProductData.Variation.length > 0 && this.state.VariationName !== "" && this.state.VariationName !== "Select" ?
                     (
                         <View>
                             <Card style={{ marginLeft: 10, marginRight: 10 }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }} >
                                     <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Name:</Text>
-                                    <Text style={{ marginLeft: 8, fontSize: 15 }}>{VProduct.VariationProductName}</Text>
+                                    <Text style={{ marginLeft: 45, fontSize: 15 }}>{VProduct.VariationProductName}</Text>
                                     {/* <Text>hercullus</Text> */}
 
 
                                 </View>
+                                {VProduct.VariationProductPrice == 0 ?
+                                    (
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                                            <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Price:</Text>
+                                            <Text style={{ marginLeft: 50, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductPrice}</Text>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                                            <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Price:</Text>
+                                            <Text style={{ marginLeft: 50, fontSize: 15 }}>{VProduct.VariationProductPrice}</Text>
+                                        </View>
+                                    )}
 
-                                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                                    <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Price:</Text>
-                                    <Text style={{ marginLeft: 8, fontSize: 15 }}>{VProduct.VariationProductPrice}</Text>
+                                {VProduct.VariationProductQty == 0 ?
+                                    (
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                                            <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Qty:</Text>
+                                            <Text style={{ marginLeft: 62, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductQty}</Text>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                                            <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Qty:</Text>
+                                            <Text style={{ marginLeft: 62, fontSize: 15 }}>{VProduct.VariationProductQty}</Text>
+                                        </View>
+                                    )}
 
-                                </View>
-
-                                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                                    <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Qty:</Text>
-                                    <Text style={{ marginLeft: 8, fontSize: 15 }}>{VProduct.VariationProductQty}</Text>
-
-                                </View>
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                     <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Description:</Text>
@@ -159,19 +181,19 @@ export default class SingleProductComponent extends Component {
                                 <Card style={{ marginLeft: 10, marginRight: 10 }}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }} >
                                         <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Name:</Text>
-                                        <Text style={{ marginLeft: 8, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductName}</Text>
+                                        <Text style={{ marginLeft: 45, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductName}</Text>
 
                                     </View>
 
                                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                         <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Price:</Text>
-                                        <Text style={{ marginLeft: 8, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductPrice}</Text>
+                                        <Text style={{ marginLeft: 50, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductPrice}</Text>
 
                                     </View>
 
                                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                         <Text style={{ marginLeft: 8, fontSize: 15 }}>Product Qty:</Text>
-                                        <Text style={{ marginLeft: 8, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductQty}</Text>
+                                        <Text style={{ marginLeft: 62, fontSize: 15 }}>{this.props.navigation.state.params.ProductData.ProductQty}</Text>
 
                                     </View>
 
@@ -216,25 +238,33 @@ export default class SingleProductComponent extends Component {
 
                 </View> */}
 
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 15 }}>Variation:</Text>
-                    <Picker
-                        selectedValue={this.state.VariationName}
-                        style={{ marginTop: 10, height: 50, width: 120 }}
-                        onValueChange={(itemValue, itemIndex) =>
-                            // this.setState({ language: itemValue })
-                            this.findSomething(itemValue, itemIndex)
-                        }>
-                        <Picker.Item label="Select" value="Select" />
-                        {this.props.navigation.state.params.ProductData.Variation.map(x => {
-                            return (
-                                <Picker.Item key={x.VariationProductName} label={x.VariationProductName} value={x.VariationProductName} />
-                            )
-                        })}
+                {this.props.navigation.state.params.ProductData.VariationProductFlag !== false ?
+                    (
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ marginTop: 10, marginLeft: 10, fontSize: 15 }}>Variation:</Text>
+                            <Picker
+                                selectedValue={this.state.VariationName}
+                                style={{ marginTop: 10, height: 50, width: 120 }}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    // this.setState({ language: itemValue })
+                                    this.findSomething(itemValue, itemIndex)
+                                }>
+                                <Picker.Item label="Select" value="Select" />
+                                {this.props.navigation.state.params.ProductData.Variation.map(x => {
+                                    return (
+                                        <Picker.Item key={x.VariationProductName} label={x.VariationProductName} value={x.VariationProductName} />
+                                    )
+                                })}
 
-                    </Picker>
+                            </Picker>
 
-                </View>
+                        </View>
+                    )
+                    :
+                    (
+                        <View />
+                    )}
+
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 40, marginBottom: 20 }} >
                     <TouchableOpacity style={{ flexDirection: 'row' }}>

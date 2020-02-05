@@ -20,8 +20,8 @@ import SingleProductAction from './src/action/SingleProductAction';
 
 
 const AppNavigator = createStackNavigator({
-  Profile: { screen: ProfileAction },
-  ProfileView: { screen: ProfileViewAction },
+  // Profile: { screen: ProfileAction },
+  // ProfileView: { screen: ProfileViewAction },
   ProductList: { screen: ProductListAction },
   SingleProduct: { screen: SingleProductAction }
 },

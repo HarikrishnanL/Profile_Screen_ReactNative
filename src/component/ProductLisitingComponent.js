@@ -12,7 +12,10 @@ export default class ProductListingComponent extends Component {
             variationFlag: false,
             valueArray: [],
             disabled: false,
-            submitFlag: true
+            submitFlag: true,
+            variationArrayflag: false,
+            initialFlag: false,
+            variationValidationFlag: false
         }
         this.index = 0;
         this.animatedValue = new Animated.Value(0);
@@ -67,22 +70,32 @@ export default class ProductListingComponent extends Component {
         this.props.OnRenderProductVariationFlag(value)
     }
 
-    addMore = () => {
-        this.animatedValue.setValue(0);
-        let newlyAddedValue = { index: this.index }
-        this.setState({ disabled: true, valueArray: [...this.state.valueArray, newlyAddedValue] }, () => {
-            Animated.timing(
-                this.animatedValue,
-                {
-                    toValue: 1,
-                    duration: 500,
-                    useNativeDriver: true
-                }
-            ).start(() => {
-                this.index = this.index + 1;
-                this.setState({ disabled: false });
+    addMore = (data) => {
+        if (this.props.ProductListingState.VariationProductName !== "" && this.state.variationFlag == true) {
+            this.animatedValue.setValue(0);
+            let newlyAddedValue = { index: this.index }
+            this.setState({ disabled: true, valueArray: [0] }, () => {
+                Animated.timing(
+                    this.animatedValue,
+                    {
+                        toValue: 1,
+                        duration: 500,
+                        useNativeDriver: true
+                    }
+                ).start(() => {
+                    this.index = this.index + 1;
+                    this.setState({ disabled: false });
+                });
             });
-        });
+
+            this.props.OnRenderVariationProductData(data)
+            this.setState({ variationArrayflag: true })
+
+        } else {
+            this.setState({
+                variationValidationFlag: true
+            })
+        }
 
 
     }
@@ -133,16 +146,55 @@ export default class ProductListingComponent extends Component {
 
     VariationProductSubmit = (data) => {
         this.setState({ submitFlag: false });
-        this.props.OnRenderVariationProductData(data)
+        this.props.OnRenderVariationProductData(data);
+
+    }
+    ExtraModule = () => {
+        if (this.props.ProductListingState.ProductName !== "" && this.props.ProductListingState.ProductPrice !== 0 && this.props.ProductListingState.ProductQty !== 0 && this.props.ProductListingState.ProductDescription !== "" && this.props.ProductListingState.ProductImageData !== "") {
+
+            this.props.navigation.navigate('SingleProduct', { ProductData: this.props.ProductListingState });
+        } else {
+            this.setState({
+                initialFlag: true,
+                variationArrayflag: false,
+                submitFlag: false,
+                variationValidationFlag: true
+            })
+        }
     }
 
-    NextScreen = () => {
-        this.props.navigation.navigate('SingleProduct', { ProductData: this.props.ProductListingState });
+    NextScreen = (data) => {
+        // if (this.props.ProductListingState.ProductName !== "" && this.props.ProductListingState.ProductPrice !== 0 && this.props.ProductListingState.ProductQty !== 0 && this.props.ProductListingState.ProductDescription !== "" && this.props.ProductListingState.ProductImageData !== "") {
+        this.props.OnRenderVariationProductData(data);
+        // this.VariationProductSubmit(data);
+        // this.props.navigation.navigate('SingleProduct', { ProductData: this.props.ProductListingState });
+
+        // }
+
+        // if (this.props.ProductListingState.ProductName !== "" && this.props.ProductListingState.ProductPrice !== 0 && this.props.ProductListingState.ProductQty !== 0 && this.props.ProductListingState.ProductDescription !== "" && this.props.ProductListingState.ProductImageData !== "") {
+        this.ExtraModule();
+        // }
+
+        // else {
+        //     this.setState({
+        //         initialFlag: true,
+        //         variationArrayflag: false,
+        //         submitFlag: false,
+        //         variationValidationFlag: true
+        //     })
+        // }
     }
 
     ResetScreen = (Productdata) => {
+        this.setState({
+            initialFlag: false
+        })
         this.props.OnRenderProductResetData(Productdata)
     }
+
+    
+
+
 
     render() {
         console.log(this.state.valueArray)
@@ -163,19 +215,35 @@ export default class ProductListingComponent extends Component {
                                     style={{ marginLeft: 8, fontSize: 15 }}
                                     placeholder={'Variation Product Name'}
                                     onChangeText={this.VariationProductNameHandler}
+                                    // onSubmitEditing={this.VariationProductSubmit}
+                                    onChange={this.VariationProductSubmit}
 
                                 />
+                                {this.props.ProductListingState.VariationProductName == "" && this.state.variationValidationFlag == true ?
+                                    (
+                                        <View>
+                                            <Text style={{ marginLeft: 15, fontSize: 12, color: 'red' }}>Enter your product Name!</Text>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <View />
+                                    )}
                                 <TextInput
                                     style={{ marginLeft: 8, fontSize: 15 }}
                                     keyboardType={'numeric'}
                                     placeholder={'Price'}
                                     onChangeText={this.VariationProductPriceHandler}
+                                // onSubmitEditing={this.VariationProductSubmit}
+
                                 />
                                 <TextInput
                                     style={{ marginLeft: 8, fontSize: 15 }}
                                     keyboardType={'numeric'}
                                     placeholder={'Qty'}
                                     onChangeText={this.VariationProductQtyHandler}
+                                // onSubmitEditing={this.VariationProductSubmit}
+
                                 />
                             </View>
                             <TouchableOpacity onPress={this.VariationProductImageHandler}>
@@ -200,15 +268,6 @@ export default class ProductListingComponent extends Component {
                         </View>
 
                     </Card>
-                    {this.state.submitFlag == true && this.props.ProductListingState.VariationProductName !== "" ? (
-                        <TouchableOpacity style={{ flexDirection: 'row-reverse' }} onPress={this.VariationProductSubmit}>
-                            <View style={{ borderColor: 'green', borderWidth: 1, borderRadius: 10, height: 40, width: 100, justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
-                                <Text>Submit</Text>
-                            </View>
-                        </TouchableOpacity>
-                    ) : (
-                            <View />
-                        )}
 
                 </Animated.View>
             );
@@ -223,37 +282,68 @@ export default class ProductListingComponent extends Component {
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: 'flex-start', marginLeft: 10 }}>
                                 <Text style={{ fontSize: 17, marginTop: 13 }}>Name:</Text>
                                 <TextInput
-                                    style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "70%", marginLeft: 8, fontSize: 15 }}
+                                    style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "70%", marginLeft: 45, fontSize: 15 }}
                                     placeholder={'Product Name'}
                                     onChangeText={this.ProductNameHandler}
                                     value={this.props.ProductListingState.ProductName}
                                 />
                             </View>
+                            {this.state.initialFlag == true && this.props.ProductListingState.ProductName == "" ?
+                                (
+                                    <View>
+                                        <Text style={{ marginLeft: 105, fontSize: 12, color: 'red' }}>Enter your name!</Text>
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View />
+                                )}
 
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: 'flex-start', marginLeft: 10, marginTop: 10 }}>
                                 <Text style={{ fontSize: 17, marginTop: 13 }}>Price:</Text>
                                 <TextInput
                                     keyboardType={'numeric'}
                                     //  numeric value
-                                    style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "40%", marginLeft: 8, fontSize: 15 }}
+                                    style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "40%", marginLeft: 52, fontSize: 15 }}
                                     placeholder={'Product Price'}
                                     onChangeText={this.ProductPriceHandler}
-                                // value={String(this.props.ProductListingState.ProductPrice)}
+                                    value={String(this.props.ProductListingState.ProductPrice)}
 
                                 />
                             </View>
+                            {this.state.initialFlag == true && this.props.ProductListingState.ProductPrice == 0 ?
+                                (
+                                    <View>
+                                        <Text style={{ marginLeft: 105, fontSize: 12, color: 'red' }}>Enter your product price!</Text>
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View />
+                                )}
 
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: 'flex-start', marginLeft: 10, marginTop: 10 }}>
                                 <Text style={{ fontSize: 17, marginTop: 13 }}>Quantity:</Text>
                                 <TextInput
                                     keyboardType={'numeric'}
                                     //  numeric value
-                                    style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "20%", marginLeft: 8, fontSize: 15, alignSelf: 'center' }}
+                                    style={{ borderBottomWidth: 0.5, borderColor: '#c7cbd1', width: "20%", marginLeft: 30, fontSize: 15, alignSelf: 'center' }}
                                     placeholder={'0'}
                                     onChangeText={this.ProductQuantityHandler}
-                                // value={String(this.props.ProductListingState.ProductQty)}
+                                    value={String(this.props.ProductListingState.ProductQty)}
                                 />
                             </View>
+
+                            {this.state.initialFlag == true && this.props.ProductListingState.ProductQty == 0 ?
+                                (
+                                    <View>
+                                        <Text style={{ marginLeft: 105, fontSize: 12, color: 'red' }}>Enter your product qty!</Text>
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View />
+                                )}
 
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: 'flex-start', marginLeft: 10, marginTop: 10 }}>
                                 <Text style={{ fontSize: 17, marginTop: 8 }}>Description:</Text>
@@ -269,9 +359,20 @@ export default class ProductListingComponent extends Component {
                                 />
                             </View>
 
+                            {this.state.initialFlag == true && this.props.ProductListingState.ProductDescription == "" ?
+                                (
+                                    <View>
+                                        <Text style={{ marginLeft: 105, fontSize: 12, color: 'red' }}>Enter your product description!</Text>
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View />
+                                )}
+
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: 'flex-start', marginLeft: 10, marginTop: 10 }}>
                                 <Text style={{ fontSize: 17, marginTop: 8 }}>Image:</Text>
-                                <TouchableOpacity style={{ flexDirection: "row", alignSelf: 'center' }} onPress={this.ProductImageHandler}>
+                                <TouchableOpacity style={{ flexDirection: "column", justifyContent: 'center', marginLeft: 44 }} onPress={this.ProductImageHandler}>
                                     <Text style={{ marginTop: 8, marginLeft: 8 }}>Choose File </Text>
                                     {this.props.ProductListingState.ProductImageData == "" ? (
                                         <Image
@@ -294,10 +395,21 @@ export default class ProductListingComponent extends Component {
                                 </TouchableOpacity>
                             </View >
 
+                            {this.state.initialFlag == true && this.props.ProductListingState.ProductImageData == "" ?
+                                (
+                                    <View>
+                                        <Text style={{ marginLeft: 105, fontSize: 12, color: 'red' }}>Choose your product image!</Text>
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View />
+                                )}
+
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: 'flex-start', marginLeft: 10, marginTop: 20 }}>
                                 <Text style={{ fontSize: 17, marginTop: 8 }}>Variation:</Text>
                                 <Switch
-                                    style={{ marginTop: 7, marginLeft: 8 }}
+                                    style={{ marginTop: 7, marginLeft: 22 }}
                                     onValueChange={this.ProductVariationHandler}
                                     value={this.state.variationFlag}
 
@@ -306,63 +418,96 @@ export default class ProductListingComponent extends Component {
                             </View>
                             {this.state.variationFlag == true ? (
                                 <View>
-                                    <Card style={{ marginLeft: 10, marginTop: 10, marginRight: 10, height: 150 }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                            <View>
-                                                <TextInput
-                                                    style={{ marginLeft: 8, fontSize: 15 }}
-                                                    placeholder={'Variation Product Name'}
-                                                    onChangeText={this.VariationProductNameHandler}
-                                                />
-                                                <TextInput
-                                                    style={{ marginLeft: 8, fontSize: 15 }}
-                                                    keyboardType={'numeric'}
-                                                    placeholder={'Price'}
-                                                    onChangeText={this.VariationProductPriceHandler}
-                                                />
-                                                <TextInput
-                                                    style={{ marginLeft: 8, fontSize: 15 }}
-                                                    keyboardType={'numeric'}
-                                                    placeholder={'Qty'}
-                                                    onChangeText={this.VariationProductQtyHandler}
-                                                />
-                                            </View>
-                                            <TouchableOpacity onPress={this.VariationProductImageHandler}>
-                                                {this.props.ProductListingState.VariationProductImage == "" ?
-                                                    (
-                                                        <Image
-                                                            source={{
-                                                                uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-                                                            }}
-                                                            style={{ width: 140, height: 140, marginTop: 5 }}
-                                                        />
-                                                    )
-                                                    :
-                                                    (
-                                                        <Image
-                                                            source={{
-                                                                uri: 'data:image/jpeg;base64,' + this.props.ProductListingState.VariationProductImage,
-                                                            }}
-                                                            style={{ width: 140, height: 140, marginTop: 5 }}
-                                                        />
-                                                    )}
+                                    {this.state.variationArrayflag == false ?
+                                        (<Card style={{ marginLeft: 10, marginTop: 10, marginRight: 10, height: 150 }}>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                                                <View>
+                                                    <TextInput
+                                                        style={{ marginLeft: 8, fontSize: 15 }}
+                                                        placeholder={'Variation Product Name'}
+                                                        onChangeText={this.VariationProductNameHandler}
+                                                     onSubmitEditing={this.VariationProductSubmit}
+                                                        // onChange={this.VariationProductSubmit}
+                                                    />
+                                                    {this.state.variationValidationFlag == true && this.props.ProductListingState.VariationProductName == "" ?
+                                                        (
+                                                            <View>
+                                                                <Text style={{ marginLeft: 15, fontSize: 12, color: 'red' }}>Enter your product Name!</Text>
+                                                            </View>
+                                                        )
+                                                        :
+                                                        (
+                                                            <View />
+                                                        )}
+                                                    <TextInput
+                                                        style={{ marginLeft: 8, fontSize: 15 }}
+                                                        keyboardType={'numeric'}
+                                                        placeholder={'Price'}
+                                                        onChangeText={this.VariationProductPriceHandler}
+                                                    // onSubmitEditing={this.VariationProductSubmit}
 
-                                            </TouchableOpacity>
-                                        </View>
+                                                    />
+                                                    <TextInput
+                                                        style={{ marginLeft: 8, fontSize: 15 }}
+                                                        keyboardType={'numeric'}
+                                                        placeholder={'Qty'}
+                                                        onChangeText={this.VariationProductQtyHandler}
+                                                    // onSubmitEditing={this.VariationProductSubmit}
 
-                                    </Card>
-                                    {this.state.submitFlag == true && this.props.ProductListingState.VariationProductName !== "" ? (
-                                        <View >
-                                            <TouchableOpacity style={{ flexDirection: 'row-reverse' }} onPress={this.VariationProductSubmit}>
-                                                <View style={{ borderColor: 'green', borderWidth: 1, borderRadius: 10, height: 40, width: 100, justifyContent: 'center', alignItems: 'center', marginRight: 12 }}>
-                                                    <Text>Submit</Text>
+                                                    />
                                                 </View>
-                                            </TouchableOpacity>
-                                        </View>
+                                                <TouchableOpacity onPress={this.VariationProductImageHandler}>
+                                                    {this.props.ProductListingState.VariationProductImage == "" ?
+                                                        (
+                                                            <Image
+                                                                source={{
+                                                                    uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+                                                                }}
+                                                                style={{ width: 140, height: 140, marginTop: 5 }}
+                                                            />
+                                                        )
+                                                        :
+                                                        (
+                                                            <Image
+                                                                source={{
+                                                                    uri: 'data:image/jpeg;base64,' + this.props.ProductListingState.VariationProductImage,
+                                                                }}
+                                                                style={{ width: 140, height: 140, marginTop: 5 }}
+                                                            />
+                                                        )}
 
-                                    ) : (
-                                            <View />
+                                                </TouchableOpacity>
+                                            </View>
+
+                                        </Card>)
+                                        :
+                                        (
+                                            this.props.ProductListingState.Variation.map(x => {
+                                                return (
+                                                    <Card key={x.VariationProductName} style={{ marginLeft: 10, marginTop: 10, marginRight: 10, height: 150 }}>
+                                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                            <View>
+                                                                <Text style={{ marginLeft: 20, marginRight: 20, marginTop: 10, fontSize: 15 }}>{x.VariationProductName}</Text>
+                                                                <Text style={{ marginLeft: 20, marginRight: 20, marginTop: 30, fontSize: 15 }}>{x.VariationProductPrice}</Text>
+                                                                <Text style={{ marginLeft: 20, marginRight: 20, marginTop: 30, fontSize: 15 }}> {x.VariationProductQty} </Text>
+                                                            </View>
+                                                            <Image
+                                                                source={{
+                                                                    uri: 'data:image/jpeg;base64,' + x.VariationProductImage,
+                                                                }}
+                                                                style={{ width: 140, height: 140, marginTop: 5, marginRight: 9 }}
+                                                            />
+                                                        </View>
+
+                                                    </Card>
+                                                )
+                                            })
                                         )}
+
+
+
+
+
 
                                     <View>
                                         <TouchableOpacity activeOpacity={0.8} style={{ alignSelf: 'center' }} onPress={this.addMore}>
