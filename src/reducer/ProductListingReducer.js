@@ -96,6 +96,7 @@ const ProfileListingReducer = (state = DEFAULT_STATE_PRODUCT_LISTING, action) =>
 
                 // } else {
                 console.log("today list")
+                console.log(action.Variation)
                 return {
                     ...state,
                     Variation: state.Variation.concat({
@@ -108,6 +109,12 @@ const ProfileListingReducer = (state = DEFAULT_STATE_PRODUCT_LISTING, action) =>
                     VariationProductPrice: 0,
                     VariationProductQty: 0,
                     VariationProductImage: '',
+                    // Variation: [].concat(action.Variation),
+                    // VariationList: state.VariationList.concat({
+                    //     VariationProductName: "".concat(state.VariationProductName),
+                    //     VariationProductPrice: state.VariationProductPrice,
+                    //     VariationProductQty: state.VariationProductQty,
+                    // })
                 }
                 // }
 

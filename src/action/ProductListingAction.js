@@ -96,10 +96,10 @@ export const Fetch_Product_Variation_Image = (VariationProductImage) => {
     }
 }
 
-export const Fetch_Variation_Product_data = (data) => {
+export const Fetch_Variation_Product_data = (Variation) => {
     return {
         type: FETCH_TEST,
-        data
+        Variation
     }
 }
 

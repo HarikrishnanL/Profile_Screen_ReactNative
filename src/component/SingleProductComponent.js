@@ -1,21 +1,23 @@
 import React, { Component } from "react";
 import { View, Text, Modal, Alert, TouchableHighlight, Image, TextInput, Picker, TouchableOpacity } from 'react-native';
 import { Container, Card } from 'native-base';
-import { SliderBox } from "react-native-image-slider-box";
+ import { SliderBox } from "react-native-image-slider-box";
+
 
 export default class SingleProductComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            images: [
-                "https://source.unsplash.com/1024x768/?nature",
-                "https://source.unsplash.com/1024x768/?water",
-                "https://source.unsplash.com/1024x768/?girl",
-                "https://source.unsplash.com/1024x768/?tree",
-            ],
+            // images: [
+            //     "https://source.unsplash.com/1024x768/?nature",
+            //     "https://source.unsplash.com/1024x768/?water",
+            //     "https://source.unsplash.com/1024x768/?girl",
+            //     "https://source.unsplash.com/1024x768/?tree",
+            // ],
             modalVisible: false,
             VariationName: '',
             ImageIndex: 0,
+            images:"data:image/jpeg;base64," + this.props.navigation.state.params.ProductData.ProductImageData
 
         }
     }
@@ -24,7 +26,7 @@ export default class SingleProductComponent extends Component {
     ModalImage = (index) => {
         this.setModalVisible(true);
         this.setState({ ImageIndex: index })
-        console.log(index)
+        // console.log(index)
     }
 
     setModalVisible(visible) {
@@ -32,11 +34,11 @@ export default class SingleProductComponent extends Component {
     }
 
     findSomething = (itemValue, itemIndex) => {
-        console.log("find");
-        console.log(itemValue);
-        console.log(itemIndex);
-        this.setState({ VariationName: itemValue })
-        console.log(this.state.VariationName)
+        // console.log("find");
+        // console.log(itemValue);
+        // console.log(itemIndex);
+        this.setState({ VariationName: itemValue,ImageIndex:itemIndex })
+        // console.log(this.state.VariationName)
 
     }
 
@@ -46,28 +48,46 @@ export default class SingleProductComponent extends Component {
         let ImageArray = this.props.navigation.state.params.ProductData.Variation.filter(x => x.VariationProductImage);
         // let ImageTest = ImageArray.concat("data:image/jpeg;base64," + this.props.navigation.state.params.ProductData.ProductImageData)
         let ImageTest = ImageArray.map(x => "data:image/jpeg;base64," + x.VariationProductImage).concat("data:image/jpeg;base64," + this.props.navigation.state.params.ProductData.ProductImageData);
+            let ImageImageTest=[]
+         ImageImageTest =ImageImageTest.concat(ImageTest[this.state.ImageIndex]);
+        // console.log(ImageImageTest)
+
         let ImageWork = ImageArray.map(x => x.VariationProductImage);
 
         let VProduct = this.props.navigation.state.params.ProductData.Variation.find(x => x.VariationProductName == this.state.VariationName)
         let VProductImage = this.props.navigation.state.params.ProductData.Variation.find(x => x.VariationProductImage == ImageWork[this.state.ImageIndex])
-        console.log("log")
-        console.log(ImageTest)
-        console.log(ImageArray)
-        console.log(VProduct)
+        // console.log("log")
+        // console.log(ImageTest)
+        // console.log(ImageArray)
+        // console.log(VProduct)
 
         return (
             <Container>
                 <View>
                     {/* <Text>SingleProductComponent</Text> */}
                     <SliderBox
-                        images={ImageTest}
+                        images={ImageImageTest}
                         ImageComponentStyle={{ width: '100%', height: 200 }}
-                        circleLoop
+                        // circleLoop
                         onCurrentImagePressed={(index) => {
-                            console.log("inde" + index)
+                            // console.log("inde" + index)
                             this.ModalImage(index)
                         }}
                     />
+                    {/* {this.props.navigation.state.params.ProductData.Variation.length > 0 ?
+                        (
+                            <Image
+                                style={{ width: 200, height: 200 }}
+                                source={{ uri: ImageTest[this.state.ImageIndex] }}
+                            />
+                        ) :
+                        (
+                            <Image
+                                style={{ width: '100%', height: 200 }}
+                                source={{ uri: "data:image/jpeg;base64," + this.props.navigation.state.params.ProductData.ProductImageData }}
+                            />
+                        )} */}
+
                 </View>
                 <View style={{ marginTop: 22 }}>
                     <Modal
@@ -82,18 +102,18 @@ export default class SingleProductComponent extends Component {
                                 {/* <Text>Hello World!</Text> */}
                                 {("data:image/jpeg;base64," + this.props.navigation.state.params.ProductData.ProductImageData) == ImageTest[this.state.ImageIndex] ?
                                     (
-                                        <View style={{ flexDirection: 'column',justifyContent: 'center', alignSelf: 'center' }}>
+                                        <View style={{ flexDirection: 'column', justifyContent: 'center', alignSelf: 'center' }}>
                                             <Image
                                                 style={{ width: 200, height: 200 }}
                                                 source={{ uri: ImageTest[this.state.ImageIndex] }}
                                             />
                                             <Text>{this.props.navigation.state.params.ProductData.ProductName}</Text>
-                                            
+
                                             <Text>{this.props.navigation.state.params.ProductData.ProductPrice}</Text>
                                             <Text>{this.props.navigation.state.params.ProductData.ProductQty}</Text>
                                         </View>
                                     ) :
-                                    (<View style={{ flexDirection: 'column',justifyContent: 'center', alignSelf: 'center' }}>
+                                    (<View style={{ flexDirection: 'column', justifyContent: 'center', alignSelf: 'center' }}>
                                         <Image
                                             style={{ width: 200, height: 200 }}
                                             source={{ uri: ImageTest[this.state.ImageIndex] }}
@@ -114,7 +134,7 @@ export default class SingleProductComponent extends Component {
 
                             </View>
                         </View>
-                        <View style={{flexDirection:'column',justifyContent:'center',alignSelf:'center'}}>
+                        <View style={{ flexDirection: 'column', justifyContent: 'center', alignSelf: 'center' }}>
                             <TouchableHighlight
                                 onPress={() => {
                                     this.setModalVisible(!this.state.modalVisible);
